@@ -1,0 +1,26 @@
+1.화상강의 사용시
+OpenVidu 다운로드
+git clone https://github.com/OpenVidu/openvidu-local-deployment -b 3.0.0
+
+도커 터미널
+cd openvidu-local-deployment/community
+.\configure_lan_private_ip_windows.bat
+
+docker compose up
+
+후 react-client 실행
+
+2.쪽지 이용시
+server 열고
+터미널에 node index.js
+
+3.모니터링 이용시 
+우분투 회원가입 후 
+우분투 프로그램에서 netstat -tnlp
+포트 확인후 properties에 입력 후
+우분투에서 glances -w
+
+
+
+
+
