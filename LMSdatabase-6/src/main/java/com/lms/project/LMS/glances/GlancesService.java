@@ -110,10 +110,10 @@ public class GlancesService {
         String body = String.format("⚠️ 현재 접속자 수: %d명\n서버가 과부하 상태에 도달할 가능성이 있습니다.\n즉시 확인 필요!", users);
 
         try {
-            emailService.sendEmail("sumir82@gmail.com", subject, body);
+            emailService.sendEmail("", subject, body);
             System.out.println("✅ 이메일 전송 완료!");
 
-            smsService.sendSms("+821084664714", body);
+            smsService.sendSms("", body);
             System.out.println("✅ SMS 전송 완료!");
 
             // ✅ 알림 전송 시간 업데이트
