@@ -1,0 +1,125 @@
+/* ✅ 전체 컨테이너 */
+.student-enroll-container {
+  max-width: 1200px; /* 기존보다 넓게 */
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+/* ✅ 제목 스타일 */
+.student-enroll-container h2 {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
+
+.student-enroll-container p {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+/* ✅ 강의 목록 */
+.course-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* ✅ 강의 카드 */
+.course-item {
+  background: #f9f9f9;
+  padding: 20px;
+  width: 350px; /* 기존보다 넓게 */
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  border-left: 6px solid #4CAF50; /* ✅ 강조 효과 */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.course-item:hover {
+  background: #f1f1f1;
+  transform: translateY(-5px);
+}
+
+/* ✅ 강의 제목 */
+.course-item h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* ✅ 강의 정보 */
+.course-item p {
+  color: #555;
+  font-size: 15px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* ✅ 수강 신청 버튼 */
+.enroll-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.enroll-btn:hover {
+  background: #0056b3;
+}
+
+/* ✅ 상태 텍스트 */
+.pending-text {
+  font-size: 16px;
+  color: #e67e22;
+  font-weight: bold;
+}
+
+.approved-text {
+  font-size: 16px;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+/* ✅ 반응형 디자인 */
+@media (max-width: 1024px) {
+  .student-enroll-container {
+    max-width: 1000px;
+    padding: 30px;
+  }
+
+  .course-list {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .student-enroll-container {
+    width: 95%;
+    padding: 25px;
+  }
+
+  .course-list {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .enroll-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}

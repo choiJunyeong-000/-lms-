@@ -1,0 +1,105 @@
+.exam-container {
+  display: flex;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  width: 1000px; /* 고정 너비를 2800px로 증가 */
+  height: 600px; /* 고정 높이 설정 (예: 700px) */
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  user-select: none; /* 텍스트 선택 비활성화 */
+}
+.exam-content {
+  flex-grow: 1; /* 남은 공간을 차지 */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+  width: calc(1000px - 400px); /* 전체 너비에서 사이드바 너비를 뺀 값으로 설정 */
+}
+
+.exam-sidebar {
+  width: 200px; /* 문제 목록의 너비를 300px로 증가 */
+  border-right: 2px solid #ddd;
+  padding-right: 10px;
+  text-align: left; /* 왼쪽 정렬 */
+
+}
+
+.exam-sidebar h3 {
+  text-align: center;
+}
+
+.question-button {
+  justify-content: flex-start;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  margin: 5px 0;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.question-button:hover {
+  background: #e2e6ea;
+}
+
+.exam-content {
+  flex-grow: 1;
+  padding-left: 20px;
+}
+
+.exam-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.question-container {
+  margin-bottom: 20px;
+  width: 100%; /* 전체 폭 사용 */
+  text-align: left; /* 왼쪽 정렬 */
+  max-height: 400px; /* 고정 높이 설정 (예: 400px) */
+  overflow-y: auto; /* 스크롤 가능 */
+}
+
+.question-text {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.option-label {
+  margin-bottom: 5px;
+}
+
+.essay-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.submit-button {
+  width: 100%;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #0056b3;
+}

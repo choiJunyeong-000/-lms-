@@ -1,0 +1,68 @@
+/* 전체 컨테이너 스타일 */
+.assignment-detail-container {
+  max-width: 600px; /* 화면 너비에 맞춰 조정 */
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+/* 헤더(타이틀) 스타일 */
+.assignment-detail-header {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* 과제 리스트 (UL) 스타일 */
+.assignment-detail-list {
+  display: flex;
+  flex-direction: column; /* 세로로 나열 */
+  gap: 16px; /* 카드 간 간격 */
+  list-style: none; /* 기본 불릿 제거 */
+  padding: 0;
+  margin: 0;
+}
+
+/* 과제 개별 카드 (LI) */
+.assignment-detail-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+}
+
+/* 과제 내용 텍스트 스타일 */
+.assignment-detail-item p {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+/* 과제 액션(버튼, 파일 업로드 등) 영역 */
+.assignment-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column; /* 세로 배치 */
+  gap: 8px; /* 내부 요소 간격 */
+}
+
+/* 파일 업로드 인풋 스타일(필요 시) */
+.assignment-file-input {
+  font-size: 0.9rem;
+}
+
+/* 버튼 스타일 */
+.assignment-detail-item button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff; /* 파란색 계열 */
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* 버튼 호버 효과 */
+.assignment-detail-item button:hover {
+  background-color: #0056b3;
+}

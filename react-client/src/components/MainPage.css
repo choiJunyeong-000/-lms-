@@ -1,0 +1,48 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    background: url('https://cdn.enewstoday.co.kr/news/photo/201808/1226041_325986_1249.jpg') no-repeat center center;
+    background-size: cover; /* 이미지가 화면을 꽉 채우도록 설정 */
+    background-position: center; /* 중앙 정렬 */
+    background-attachment: fixed; /* 배경을 고정 */
+    opacity: 0.8; /* 이미지 투명도 설정 */
+  }
+  
+  .home-container h1 {
+    font-size: 4em; /* 글씨 크기 설정 */
+    color: black;
+    font-weight: bold; /* 글씨를 굵게 설정 */
+    margin: 0;
+  }
+  
+  .home-container p {
+    font-size: 2.0em; /* 글씨 크기 설정 */
+    color: black;
+    font-weight: bold; /* 글씨를 굵게 설정 */
+    margin: 10px 0;
+  }
+  
+  .home-buttons {
+    margin-top: 20px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }

@@ -1,0 +1,170 @@
+전체 페이지 스타일
+.message-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f2f2f2;
+}
+
+/* 채팅 컨테이너: 좌측 연락처 목록 + 우측 채팅 영역 */
+.chat-container {
+  display: flex;
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+/* 좌측 연락처 목록 */
+.contact-list {
+  width: 30%;
+  padding: 20px;
+  background: #f9f9f9;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.contact-list h3 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.contact-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.2s ease-in-out;
+}
+
+.contact-item:hover {
+  background: #eaeaea;
+}
+
+.contact-item.selected {
+  background: #007bff;
+  color: #fff;
+}
+
+.unread-badge {
+  background: red;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* 우측 채팅 영역 */
+.chat-area {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 채팅 헤더 */
+.chat-header {
+  padding: 15px;
+  background: #007bff;
+  color: #fff;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+/* 메시지 목록 영역 */
+.chat-messages {
+  /* 🔥 부모 컨테이너를 flex-column으로 설정해야 align-self가 제대로 동작함 */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px;
+  background: #bce7fb;
+  overflow-y: auto;
+}
+
+/* 개별 메시지 컨테이너 */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  max-width: 60%;
+  margin-bottom: 10px;
+}
+
+/* 보낸 메시지(오른쪽 정렬) */
+.chat-message.sent {
+  align-self: flex-end; /* 오른쪽 정렬 */
+}
+
+/* 받은 메시지(왼쪽 정렬) */
+.chat-message.received {
+  align-self: flex-start; /* 왼쪽 정렬 */
+}
+
+/* 읽음 상태 (말풍선 위) */
+.read-status {
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 2px;
+  text-align: right; /* 보낸 메시지는 오른쪽 정렬 */
+}
+
+/* 메시지 말풍선 (내용) */
+.message-content {
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.chat-message.sent .message-content {
+  background: #dcf8c6;
+}
+
+.chat-message.received .message-content {
+  background: #fff;
+}
+
+/* 타임스탬프 (말풍선 아래) */
+.timestamp {
+  font-size: 10px;
+  color: #888;
+  margin-top: 2px;
+  text-align: right;
+}
+
+.chat-message.received .timestamp {
+  text-align: left;
+}
+
+/* 반응형: 화면 좁아지면 2열 → 1열 */
+@media screen and (max-width: 768px) {
+  .chat-container {
+    flex-direction: column;
+    height: 100vh;
+  }
+  .contact-list {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  .chat-area {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.unread-badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 5px;
+}

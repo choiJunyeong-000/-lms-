@@ -1,0 +1,109 @@
+/* 전체 페이지 컨테이너 */
+.dashboard {
+  display: flex;
+  justify-content: center;    /* 수평 중앙 정렬 */
+  align-items: flex-start;    /* 세로 정렬 (위쪽 맞춤) */
+  padding: 40px;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  flex-direction: column;     /* 세로로 쌓이게 */
+}
+
+/* 메인 콘텐츠 영역 */
+.mainContent {
+  background-color: #ffffff;
+  padding: 30px;
+  width: 100%;
+  max-width: 1100px; /* 원하는 너비로 조정 */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* 수직으로 배치 */
+}
+
+/* 탭 버튼 컨테이너 */
+.tabButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  padding: 0 20px; /* 버튼 여백을 추가해서 균형 맞추기 */
+}
+
+/* 탭 버튼 기본 스타일 */
+.tabButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.tabButton:hover {
+  background-color: #0056b3;
+}
+
+/* 포커스 시 스타일 */
+.tabButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+/* 활성화된 탭 버튼 */
+.activeTab {
+  background-color: #0056b3;
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3); /* 클릭시 효과 추가 */
+}
+
+/* 각 탭(설문) 컨테이너 */
+.surveyContainer {
+  margin-top: 20px;
+  background-color: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  max-height: 500px;   /* 탭 내용이 많으면 스크롤이 생기게 */
+  overflow-y: auto;    /* 세로 스크롤 */
+}
+
+/* 설문 제목 */
+.surveyContainer h3 {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* 설문 항목 */
+.survey-item {
+  margin-bottom: 15px;
+}
+
+.survey-item button {
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 16px;
+}
+
+.back-btn {
+  margin-top: 20px;
+}
+
+/* 버튼들 관리 */
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+button {
+  font-size: 14px;
+  padding: 8px 16px;
+  margin: 5px;
+}

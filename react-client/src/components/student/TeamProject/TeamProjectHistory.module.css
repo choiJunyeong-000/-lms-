@@ -1,0 +1,39 @@
+/* TeamProjectHistory.module.css */
+.teamProjectHistory {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px; /* 필요시 추가 */
+  }
+  
+  .historyTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+  
+  .historyTable th,
+  .historyTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .historyTable th {
+    background-color: #f5f5f5;
+  }
+  
+  .historyTable a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .historyTable a:hover {
+    text-decoration: underline;
+  }
+  
+  .errorMessage {
+    color: red;
+    text-align: center;
+    padding: 10px;
+  }
+  

@@ -1,0 +1,107 @@
+/* AdminSurveyResponses.module.css */
+.adminSurveyResponses {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* 전체 그룹(타입) 컨테이너 */
+.groupContainer {
+  margin-bottom: 2rem;
+}
+
+/* 그룹(타입) 헤더 */
+.groupHeader {
+  color: #007bff;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+/* 그룹에 속한 여러 설문(타이틀)을 가로 배치 */
+.groupBoxList {
+  display: grid;
+  /* 3열 고정, 너비가 부족하면 줄바꿈 */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* 개별 박스 */
+.groupBox {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+/* 그룹 박스 내부의 타이틀 */
+.groupBoxHeader {
+  margin-bottom: 0.5rem;
+}
+
+/* '전체 응답 보기' 버튼 */
+.groupButton {
+  background: #0069d9;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 0.5rem;
+}
+
+.groupButton:hover {
+  background: #0056b3;
+}
+
+/* 펼쳐진 후, 서브미션(각 설문 id별)들을 담는 컨테이너 */
+.submissionGrid {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.surveyCard {
+  width: 250px;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.surveyCardHeader {
+  margin: 0.5rem 0;
+}
+
+/* '그래프 보기' 버튼 */
+.responseButton {
+  background: #28a745;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.responseButton:hover {
+  background: #218838;
+}
+
+.chartContainer {
+  max-width: 400px;
+  margin-top: 1rem;
+}
+
+.chartBox {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+}
+
+.chartBoxHeader {
+  margin: 0.5rem 0;
+}

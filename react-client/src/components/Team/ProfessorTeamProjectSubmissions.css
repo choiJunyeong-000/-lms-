@@ -1,0 +1,44 @@
+/* ProfessorTeamProjectSubmissions.css - 교수용 팀 프로젝트 제출 내역 */
+
+.professor-submissions-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f1f1f1;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.professor-submissions-container h2 {
+    text-align: center;
+    color: #444;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.professor-submissions-container table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+.professor-submissions-container th,
+.professor-submissions-container td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.professor-submissions-container th {
+    background-color: #007bff;
+    color: white;
+}
+
+.professor-submissions-container a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.professor-submissions-container a:hover {
+    text-decoration: underline;
+}

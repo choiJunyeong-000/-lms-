@@ -1,0 +1,49 @@
+.portal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px); /* 헤더 높이를 제외한 전체 높이 */
+  padding: 20px;
+}
+
+.portal-images {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.portal-image-container {
+  position: relative;
+  flex: 1;
+  max-width: 50%;
+  height: 80%;
+}
+
+.portal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0.7; /* 기본 투명도 설정 */
+}
+
+.portal-image:hover {
+  transform: scale(1.05);
+  opacity: 1; /* 호버 시 투명도 변경 */
+}
+
+.portal-image-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black; /* 텍스트 색상을 검정색으로 설정 */
+  font-size: 3em; /* 텍스트 크기 조정 */
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* 흰색 그림자 추가 */
+  pointer-events: none; /* 텍스트가 클릭 이벤트를 방해하지 않도록 설정 */
+}

@@ -1,0 +1,88 @@
+/* ✅ 전체 컨테이너 */
+.edit-container {
+    width: 60%;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* ✅ 제목 스타일 */
+.edit-container h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* ✅ 입력 필드 공통 스타일 */
+.edit-container input,
+.edit-container textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: 0.2s ease-in-out;
+}
+
+/* ✅ 입력 필드 포커스 효과 */
+.edit-container input:focus,
+.edit-container textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* ✅ 텍스트 영역 크기 조절 */
+.edit-container textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+/* ✅ 버튼 컨테이너 */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* ✅ 버튼 공통 스타일 */
+.edit-container button {
+    width: 120px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+/* ✅ 수정 완료 버튼 */
+.edit-container .update-button {
+    background-color: #007bff;
+}
+
+.edit-container .update-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.03);
+}
+
+/* ✅ 취소 버튼 */
+.edit-container .cancel-button {
+    background-color: #6c757d;
+}
+
+.edit-container .cancel-button:hover {
+    background-color: #5a6268;
+    transform: scale(1.03);
+}

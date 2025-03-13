@@ -1,0 +1,51 @@
+/* TeamProjectSubmit.module.css */
+.teamProjectSubmit {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+  }
+  
+  .teamProjectSubmit h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  
+  input[type="file"] {
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+ 
+  
+  
+  
+  .feedbackMessage {
+    margin-bottom: 15px;
+    color: green;
+    font-weight: bold;
+  }
+  
+  .deadlineMessage {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .visuallyHidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  

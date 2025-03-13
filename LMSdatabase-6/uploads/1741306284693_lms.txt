@@ -1,0 +1,1389 @@
+1. LoginApplication.java
+package lms;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LoginApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(LoginApplication.class, args);
+    }
+}
+
+2. AdminAccountInitializer.java
+package lms.common.config;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import lms.member.domain.Member;
+import lms.member.domain.MemberRole;
+import lms.member.repository.MemberRepository;
+
+@Component
+public class AdminAccountInitializer {
+
+    @Bean
+    public CommandLineRunner createAdminAccount(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            String adminUsername = "admin";
+            String adminPassword = "1234";
+            String adminEmail = "admin@example.com";
+
+            if (memberRepository.findById(adminUsername).isEmpty()) {
+            	Member admin = Member.builder()
+            	        .id(adminUsername)
+            	        .name("관리자")
+            	        .password(passwordEncoder.encode(adminPassword)) // 암호화된 비밀번호 저장
+            	        .email(adminEmail)
+            	        .role(MemberRole.ADMIN)
+            	        .build();
+                memberRepository.save(admin);
+                System.out.println("Admin account created: " + adminUsername);
+            } else {
+                System.out.println("Admin account already exists.");
+            }
+        };
+    }
+}
+
+3. RedisConfig.java
+package lms.common.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+
+@Configuration
+public class RedisConfig {
+
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(host, port);
+    }
+
+    /**
+     * Spring Data Redis 를 이용하면 간단하게 할 수 있지만 트랜잭션을 지원하지 않는다
+     * RedisTemplate 이 트랜잭션을 지원한다
+     */
+    @Bean
+    public RedisTemplate<?, ?> redisTemplate() {
+        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setEnableTransactionSupport(true); // 트랜잭션 지원
+        return redisTemplate;
+    }
+
+}
+
+4. WebMvcConfig
+package lms.common.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import lms.common.interceptor.AccessPermissionCheckInterceptor;
+
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AccessPermissionCheckInterceptor())
+                .order(1)
+                .excludePathPatterns("/", "/login","/main", "/loginHome", "/signUp", "/renew", "/loginSuccess",
+                        "/login/oauth2/code/**", "/oauth2/signUp", "/error", "/js/**");
+    }
+}
+
+5. MemberService.java
+package lms.common.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import lms.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/admin/assign-role")
+@RequiredArgsConstructor
+public class AdminController {
+
+    private final MemberService memberService;
+
+    @PostMapping("/student")
+    public ResponseEntity<String> assignStudentRole(@RequestParam String username) {
+        boolean success = memberService.assignRole(username, "ROLE_STUDENT");
+        return success
+            ? ResponseEntity.ok("학생 역할이 부여되었습니다.")
+            : ResponseEntity.badRequest().body("역할 부여 실패: 사용자 이름을 확인하세요.");
+    }
+
+
+
+    @PostMapping("/professor")
+    public ResponseEntity<String> assignProfessorRole(@RequestParam String username) {
+        boolean success = memberService.assignRole(username, "ROLE_PROFESSOR");
+        return success
+            ? ResponseEntity.ok("교수 역할이 부여되었습니다.")
+            : ResponseEntity.badRequest().body("역할 부여 실패: 사용자 아이디를 확인하세요.");
+    }
+    
+    @PostMapping("/user")
+    public ResponseEntity<String> assignUserRole(@RequestParam String username) {
+        boolean success = memberService.assignRole(username, "ROLE_USER");
+        return success
+            ? ResponseEntity.ok("유저 역할이 부여되었습니다.")
+            : ResponseEntity.badRequest().body("역할 부여 실패: 사용자 이름을 확인하세요.");
+    }
+
+}
+
+6. HomeController
+package lms.common.controller;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+
+    // 기본 홈 페이지
+    @GetMapping("/")
+    public String home() {
+        return "home";
+    }
+
+    // 회원가입 페이지
+    @GetMapping("/signUp")
+    public String loadSignUp() {
+        return "member/signUp";
+    }
+
+    // 로그인 페이지
+    @GetMapping("/loginHome")
+    public String loginHome() {
+        return "member/loginHome";
+    }
+
+    // 로그인 성공 페이지
+    @GetMapping("/loginSuccess")
+    public String loginSuccess(Authentication authentication, Model model) {
+        if (authentication == null) {
+            return "redirect:/loginHome"; // 인증 정보가 없으면 로그인 페이지로 리다이렉트
+        }
+
+        String userRole = authentication.getAuthorities().stream()
+                                         .map(GrantedAuthority::getAuthority)
+                                         .findFirst()
+                                         .orElse("ROLE_USER");
+
+        model.addAttribute("userRole", userRole);
+        return "loginSuccess";
+    }
+
+
+    // 학생 전용 페이지
+    @GetMapping("/studentPage")
+    public String studentPage() {
+        return "member/studentPage";
+    }
+
+    // 교수 전용 페이지
+    @GetMapping("/professorPage")
+    public String professorPage() {
+        return "member/professorPage";
+    }
+
+    // 관리자 전용 페이지
+    @GetMapping("/adminPage")
+    public String adminPage() {
+        return "member/adminPage";
+    }
+    
+ // 유저 페이지
+    @GetMapping("/main")
+    public String userPage() {
+        return "/main"; // 템플릿 파일 이름
+    }
+}
+
+7. RestApiController.java
+package lms.common.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class RestApiController {
+
+    // 학생 권한
+    @GetMapping("/student")
+    public String student() {
+        return "학생 페이지 입니다.";
+    }
+
+    // 교수 권한
+    @GetMapping("/professor")
+    public String professor() {
+        return "교수 페이지 입니다.";
+    }
+
+    // 관리자 권한
+    @GetMapping("/admin")
+    public String admin() {
+        return "관리자 페이지 입니다.";
+    }
+
+   @GetMapping("/user")
+   public String user() {
+	   return "유저 페이지 입니다.";
+   }
+  
+   
+}
+
+8. AccessPermissionCheckInterceptor
+package lms.common.interceptor;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lms.member.domain.MemberRole;
+
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+
+/**
+ * 권한에 따른 처리를 하기 위한 Interceptor
+ * @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) 를 선언하고
+ * Controller 에서 @PreAuthorize 를 사용해도 되지만, Controller 로 가기 전, Interceptor 에서 처리를 하는 것이 낫다고 생각함
+ */
+
+public class AccessPermissionCheckInterceptor implements HandlerInterceptor {
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+	    String uri = request.getRequestURI();
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+	    // 로그인 성공 페이지와 공개 경로 허용
+	    if (uri.equals("/loginSuccess") || uri.equals("/")) {
+	        return true;
+	    }
+
+	    // 관리자 권한 확인
+	    if (uri.startsWith("/admin")) {
+	        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()))) {
+	            return true;
+	        }
+	    } else if (uri.startsWith("/professor")){
+	        // 교수 권한 확인
+	        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(MemberRole.PROFESSOR.getValue()))) {
+	            return true;
+	        }
+	    }else if (uri.startsWith("/student")){
+	        // 학생 권한 확인
+	        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(MemberRole.STUDENT.getValue()))) {
+	            return true;
+	        }
+	    }else if (uri.startsWith("user")){
+	        // 일반 사용자 권한 확인
+	        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(MemberRole.USER.getValue()))) {
+	            return true;
+	        }
+	    }
+
+	    response.setStatus(SC_FORBIDDEN);
+	    response.setCharacterEncoding("utf-8");
+	    new ObjectMapper().writeValue(response.getWriter(), "접근 권한이 없습니다.");
+	    return false;
+	}
+}
+
+9. JwtConstants.java
+package lms.jwt.constants;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class JwtConstants {
+    public static final String SECRET_KEY = "ThisIsServerSecretKey";
+    public static final long ACCESS_EXP_TIME = 60000 * 1;   // 1 분 설정
+    public static final long REFRESH_EXP_TIME = 60000 * 5;   // 5 분 설정
+
+    public static final String JWT_HEADER = "Authorization";
+    public static final String JWT_TYPE = "BEARER ";
+
+    public static final String ACCESS = "AccessToken";
+    public static final String REFRESH = "RefreshToken";
+}
+
+10. JwtUtils
+package lms.jwt.constants;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import lms.member.domain.Member;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class JwtUtils {
+
+    // Access Token 에는 id 와 role 을 담는다
+    public static String generateAccessToken(Member member) {
+
+        return JWT.create()
+                .withSubject(JwtConstants.ACCESS)
+                .withHeader(createHeader())
+                .withClaim("id", member.getId())
+                .withClaim("role", member.getRole().getValue())
+                .withExpiresAt(createExpireDate(JwtConstants.ACCESS_EXP_TIME))
+                .sign(Algorithm.HMAC512(JwtConstants.SECRET_KEY));
+    }
+
+    // Refresh Token 에는 아무것도 담지 않는다
+    public static String generateRefreshToken(Member member) {
+        return JWT.create()
+                .withSubject(JwtConstants.REFRESH)
+                .withHeader(createHeader())
+                .withExpiresAt(createExpireDate(JwtConstants.REFRESH_EXP_TIME))
+                .sign(Algorithm.HMAC512(JwtConstants.SECRET_KEY));
+    }
+
+    // 헤더 정보 생성
+    private static Map<String, Object> createHeader() {
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS512");
+        return header;
+    }
+
+    // 만료 시간 생성
+    private static Date createExpireDate(long expireTime) {
+        return new Date(System.currentTimeMillis() + expireTime);
+    }
+
+    
+    // 헤더에 Bearer XXX 형식으로 담겨온 토큰을 추출한다
+    public static String getTokenFromHeader(String header) {
+        return header.split(" ")[1];
+    }
+
+
+    // 토큰 유효성 검사 => 여러 예외가 발생함 ( 호출하는 곳에서 처리 필요 )
+    public static DecodedJWT verifyToken(String token) {
+        return JWT.require(Algorithm.HMAC512(JwtConstants.SECRET_KEY)).build().verify(token);
+    }
+
+    public static UsernamePasswordAuthenticationToken getAuthenticationToken(DecodedJWT decodedJWT) {
+        String id = decodedJWT.getClaim("id").asString();
+        String role = decodedJWT.getClaim("role").asString();
+
+        return new UsernamePasswordAuthenticationToken(id, null,
+                Collections.singleton(new SimpleGrantedAuthority(role)));
+    }
+}
+
+11. JwtController.java
+package lms.jwt.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lms.jwt.constants.JwtConstants;
+import lms.jwt.constants.JwtUtils;
+import lms.jwt.service.JwtService;
+
+import java.util.NoSuchElementException;
+
+@RestController
+@RequiredArgsConstructor
+public class JwtController {
+
+    private final JwtService jwtService;
+
+    @GetMapping("/renew")
+    public ResponseEntity<?> renewToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String refreshToken = JwtUtils.getTokenFromHeader(request.getHeader(JwtConstants.JWT_HEADER));
+            return ResponseEntity.ok(JwtConstants.JWT_TYPE + jwtService.renewToken(refreshToken));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body("Refresh Token 이 만료되었습니다");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}
+
+12. RefreshToken.java
+package lms.jwt.domain;
+
+import lombok.Data;
+
+@Data
+public class RefreshToken {
+    private String token;
+    private String memberId;
+
+    public RefreshToken(String token, String memberId) {
+        this.token = token;
+        this.memberId = memberId;
+    }
+}
+
+
+13. JwtAuthenticationFilter.java
+package lms.jwt.filter;
+
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lms.jwt.constants.JwtConstants;
+import lms.jwt.constants.JwtUtils;
+
+import java.io.IOException;
+
+import static jakarta.servlet.http.HttpServletResponse.*;
+import static lms.jwt.constants.JwtUtils.verifyToken;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+@Component
+@Slf4j
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final String[] whitelist = {"/", "/login", "/loginHome", "/signUp", "/renew", "/loginSuccess",
+                                            "/login/oauth2/code/**", "/oauth2/signUp", "/error", "/js/**"};
+
+    // 필터를 거치지 않을 URL 을 설정하고, true 를 return 하면 바로 다음 필터를 진행하게 됨
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return PatternMatchUtils.simpleMatch(whitelist, requestURI);
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        String header = request.getHeader(JwtConstants.JWT_HEADER);
+
+        // 로그 추가
+        log.debug("Request URI: {}", request.getRequestURI());
+        log.debug("Authorization Header: {}", header);
+
+        // 세션에서 인증 정보 확인
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+            SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            log.debug("User is already authenticated via session.");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 토큰이 없거나 잘못된 경우 처리
+        if (header == null || !header.startsWith(JwtConstants.JWT_TYPE)) {
+            log.warn("Token 이 존재하지 않습니다");
+            response.setStatus(SC_BAD_REQUEST);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("utf-8");
+            new ObjectMapper().writeValue(response.getWriter(), "Token 이 존재하지 않습니다");
+            return;
+        }
+
+        try {
+            // 토큰 검증
+            String token = JwtUtils.getTokenFromHeader(header);
+            log.debug("Extracted Token: {}", token);
+
+            DecodedJWT decodedJWT = verifyToken(token);
+            UsernamePasswordAuthenticationToken authenticationToken = JwtUtils.getAuthenticationToken(decodedJWT);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            filterChain.doFilter(request, response);
+
+        } catch (TokenExpiredException e) {
+            log.error("Access Token 이 만료되었습니다: {}", e.getMessage());
+            response.setStatus(SC_UNAUTHORIZED);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("utf-8");
+            new ObjectMapper().writeValue(response.getWriter(), "Access Token 이 만료되었습니다.");
+        } catch (Exception e) {
+            log.error("올바르지 않은 Token 입니다: {}", e.getMessage());
+            response.setStatus(SC_BAD_REQUEST);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("utf-8");
+            new ObjectMapper().writeValue(response.getWriter(), "올바르지 않은 Token 입니다.");
+        }
+    }
+}
+
+14. JwtRepository.java
+package lms.jwt.repository;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Repository;
+
+import lms.jwt.constants.JwtConstants;
+import lms.jwt.domain.RefreshToken;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+@Repository
+@RequiredArgsConstructor
+public class JwtRepository {
+
+    private final RedisTemplate redisTemplate;
+
+    public RefreshToken save(RefreshToken refreshToken) {
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(refreshToken.getToken(), refreshToken.getMemberId());
+        redisTemplate.expire(refreshToken.getToken(), JwtConstants.REFRESH_EXP_TIME, TimeUnit.MILLISECONDS); // 5분 동안 Redis 에 저장
+        return refreshToken;
+    }
+
+    public Optional<RefreshToken> findByToken(String refreshToken) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String userId = valueOperations.get(refreshToken);
+
+        if (Objects.isNull(userId)) {
+            return Optional.empty();
+        }
+        return Optional.of(new RefreshToken(refreshToken, userId));
+    }
+}
+
+15. JwtService.java
+package lms.jwt.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import lms.jwt.constants.JwtUtils;
+import lms.jwt.domain.RefreshToken;
+import lms.jwt.repository.JwtRepository;
+import lms.member.domain.Member;
+import lms.member.repository.MemberRepository;
+import lms.security.exception.UserNotFoundException;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class JwtService {
+
+    private final JwtRepository jwtRepository;
+    private final MemberRepository memberRepository;
+
+    public RefreshToken save(RefreshToken refreshToken) {
+        return jwtRepository.save(refreshToken);
+    }
+
+    public Optional<RefreshToken> findByToken(String token) {
+        return jwtRepository.findByToken(token);
+    }
+
+    public String renewToken(String refreshToken) {
+        // token 이 존재하는지 찾고, 존재한다면 RefreshToken 안의 memberId 를 가져와서 member 를 찾은 후 AccessToken 생성
+        RefreshToken token = this.findByToken(refreshToken).orElseThrow(NoSuchElementException::new);
+        Member member = memberRepository.findById(token.getMemberId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
+        return JwtUtils.generateAccessToken(member);
+    }
+}
+
+16. MemberController.java
+package lms.member.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import lms.member.domain.Member;
+import lms.member.domain.MemberDTO;
+import lms.member.service.MemberService;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Controller
+@RequiredArgsConstructor
+public class MemberController {
+
+    private final MemberService memberService;
+
+    @PostMapping("/signUp")
+    @ResponseBody
+    public ResponseEntity<?> signUp(@Valid @RequestBody MemberDTO memberDTO, BindingResult bindingResult) {
+        // 유효성 검사 에러 처리
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMap);
+        }
+
+        // 중복 확인
+        if (memberService.findById(memberDTO.getId()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");
+        }
+        if (memberService.findByEmail(memberDTO.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");
+        }
+
+        // 회원 저장
+        Member savedMember = memberService.save(memberDTO);
+        if (savedMember == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입에 실패했습니다.");
+        }
+
+        // 기본 역할 (예: ROLE_USER) 할당
+        boolean roleAssigned = memberService.assignRole(savedMember.getId(), "ROLE_USER");
+        if (!roleAssigned) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기본 역할 할당에 실패했습니다.");
+        }
+
+        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+    }
+}
+
+17.  Member.java
+package lms.member.domain;
+
+
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import jakarta.persistence.*;
+
+@Entity
+@Data
+public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long no;
+    private String id;
+    private String name;
+    private String password;
+    private String email;
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+    private String username;
+    private String socialId;
+
+    public Member() {
+
+    }
+
+    @Builder
+    public Member(String id, String name, String password, String email, MemberRole role, SocialType socialType, String socialId) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.socialType = socialType;
+        this.socialId = socialId;
+        
+    }
+    
+
+    // Member 가 생성되기 이전 DTO 로 User 를 생성할 때 사용
+    // 비밀번호 암호화까지 동시에 수행
+    public static Member createUser(MemberDTO dto, PasswordEncoder passwordEncoder) {
+        Member member = Member.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))    // 암호화해서 User 생성
+                .role(MemberRole.USER)    // 역할 지정
+                .socialId(dto.getSocialId())
+                .build();
+        return member;
+    }
+}
+
+18. MemberDTO.java
+package lms.member.domain;
+
+import lombok.Data;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+@Data
+public class MemberDTO {
+    @NotBlank
+    private String id;
+    @NotBlank
+    private String name;
+    @NotBlank
+    private String password;
+    @NotBlank
+    @Email
+    private String email;
+    // OAuth2 최초 로그인 후 회원가입 시 필요한 정보
+    private String socialType;
+    private String socialId;
+}
+
+19. MemberRole.java
+package lms.member.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public enum MemberRole {
+
+    USER("ROLE_USER"),         // 일반 사용자
+    ADMIN("ROLE_ADMIN"),       // 관리자
+    STUDENT("ROLE_STUDENT"),       // 학
+    PROFESSOR("ROLE_PROFESSOR"); // 교수
+
+    private String value;
+
+}
+
+20. SocialType.java
+package lms.member.domain;
+
+public enum SocialType {
+    KAKAO, NAVER, GOOGLE
+}
+
+21. MemberRepository.java
+package lms.member.repository;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+import lms.member.domain.Member;
+import lms.member.domain.SocialType;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+@Transactional
+
+public class MemberRepository {
+
+    private final EntityManager em;
+
+    public MemberRepository(EntityManager em) {
+        this.em = em;
+    }
+
+    public Member save(Member member) {
+        em.persist(member);
+        return member;
+    }
+
+    private Optional<Member> findSingleResult(String jpql, String paramName, Object paramValue) {
+        TypedQuery<Member> query = em.createQuery(jpql, Member.class).setParameter(paramName, paramValue);
+        List<Member> resultList = query.getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
+    }
+
+    public Optional<Member> findById(String id) {
+        String jpql = "SELECT u FROM Member u WHERE u.id = :id";
+        return findSingleResult(jpql, "id", id);
+    }
+
+    public Optional<Member> findByEmail(String email) {
+        String jpql = "SELECT u FROM Member u WHERE u.email = :email";
+        return findSingleResult(jpql, "email", email);
+    }
+
+    public Optional<Member> findByName(String name) {
+        String jpql = "SELECT u FROM Member u WHERE u.name = :name";
+        return findSingleResult(jpql, "name", name);
+    }
+
+
+    public Optional<Member> findBySocialTypeAndSocialId(SocialType socialType, String socialId) {
+        String jpql = "SELECT u FROM Member u WHERE u.socialType = :socialType AND u.socialId = :socialId";
+        TypedQuery<Member> query = em.createQuery(jpql, Member.class)
+                                     .setParameter("socialType", socialType)
+                                     .setParameter("socialId", socialId);
+        List<Member> resultList = query.getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
+    }
+}
+
+22. MemberService.java
+package lms.member.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lms.member.domain.Member;
+import lms.member.domain.MemberDTO;
+import lms.member.domain.MemberRole;
+import lms.member.repository.MemberRepository;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public Member save(MemberDTO dto) {
+        Member user = Member.createUser(dto, passwordEncoder);
+        return memberRepository.save(user);
+    }
+
+    public Optional<Member> findById(String id) {
+        return memberRepository.findById(id);
+    }
+
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
+    
+
+    /**
+     * 사용자에게 역할(Role)을 할당하는 메서드
+     *
+     * @param username 사용자 이름
+     * @param role     부여할 역할 (예: ROLE_STUDENT, ROLE_PROFESSOR)
+     * @return 성공 여부 (true: 성공, false: 실패)
+     */
+    public boolean assignRole(String name, String role) {
+        System.out.println("Assigning role to name: " + name + ", role: " + role);
+
+        Optional<Member> memberOptional = memberRepository.findByName(name);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            System.out.println("User found: " + member);
+
+            // MemberRole의 value 속성과 role 비교
+            MemberRole assignedRole = Arrays.stream(MemberRole.values())
+                .filter(r -> r.getValue().equals(role))
+                .findFirst()
+                .orElse(null);
+
+            if (assignedRole != null) {
+                member.setRole(assignedRole);
+                memberRepository.save(member);
+                System.out.println("Role assigned successfully: " + assignedRole);
+                return true;
+            } else {
+                System.out.println("Invalid role: " + role);
+            }
+        } else {
+            System.out.println("User not found");
+        }
+        return false;
+    }
+
+}
+
+23. CustomAuthenticationProvider.java
+package lms.security.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import lms.security.domain.UserDetailsImpl;
+import lms.security.exception.PasswordNotMatchException;
+import lms.security.service.UserDetailsServiceImpl;
+
+@RequiredArgsConstructor
+public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    public final UserDetailsServiceImpl userDetailsService;
+    public final BCryptPasswordEncoder passwordEncoder;
+
+    // 인증 처리 수행
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String username = authentication.getName();
+        String password = (String) authentication.getCredentials();
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, password, userDetails.getAuthorities());
+    }
+
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+    
+}
+
+24. WebSecurityConfig.java
+package lms.security.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import lms.jwt.service.JwtService;
+import lms.security.filter.CustomAuthenticationFilter;
+import lms.security.handler.CustomLoginFailureHandler;
+import lms.security.handler.CustomLoginSuccessHandler;
+import lms.security.service.UserDetailsServiceImpl;
+
+@RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig {
+
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtService jwtService;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationManager authenticationManager) throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
+        customAuthenticationFilter.setFilterProcessesUrl("/login");
+        customAuthenticationFilter.setAuthenticationSuccessHandler(customLoginSuccessHandler());
+        customAuthenticationFilter.setAuthenticationFailureHandler(customLoginFailureHandler());
+        customAuthenticationFilter.afterPropertiesSet();
+        return customAuthenticationFilter;
+    }
+
+    @Bean
+    public CustomLoginSuccessHandler customLoginSuccessHandler() {
+        return new CustomLoginSuccessHandler(jwtService);
+    }
+
+    @Bean
+    public CustomLoginFailureHandler customLoginFailureHandler() {
+        return new CustomLoginFailureHandler();
+    }
+
+    @Bean
+    public AuthenticationProvider customAuthenticationProvider() {
+        return new CustomAuthenticationProvider(userDetailsService, passwordEncoder());
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()
+            .authorizeHttpRequests(auth -> auth
+            	    .requestMatchers("/", "/loginHome", "/signUp","/main", "/css/**", "/js/**", "/images/**").permitAll()
+            	    .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+            	    .requestMatchers("/professor/**").hasAuthority("ROLE_PROFESSOR")
+            	    .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT")
+            	    
+          
+            	    .anyRequest().authenticated()
+            	)
+            .formLogin(form -> form
+                .loginPage("/loginHome")
+               
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutSuccessUrl("/")
+                .permitAll()
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+            )
+            .requestCache().disable();
+
+        http.addFilterBefore(customAuthenticationFilter(authenticationManager(http)), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                   .authenticationProvider(customAuthenticationProvider())
+                   .build();
+    }
+}
+
+25. UserDetailsImpl.java
+package lms.security.domain;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lms.member.domain.Member;
+
+import java.util.Collection;
+
+@Getter
+@RequiredArgsConstructor
+public class UserDetailsImpl implements UserDetails {
+
+    private final Member member;
+    private final Collection<? extends GrantedAuthority> authorities;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return member.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return member.getName();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+}
+
+26. InputNotFoundException.java
+package lms.security.exception;
+
+import org.springframework.security.core.AuthenticationException;
+
+public class InputNotFoundException extends AuthenticationException {
+    public InputNotFoundException(String m) {
+        super(m);
+    }
+}
+
+27. PasswordNotMatchException.java
+package lms.security.exception;
+
+import org.springframework.security.core.AuthenticationException;
+
+public class PasswordNotMatchException extends AuthenticationException {
+    public PasswordNotMatchException(String m) {
+        super(m);
+    }
+}
+
+28. UserNotFoundException.java
+package lms.security.exception;
+
+import org.springframework.security.core.AuthenticationException;
+
+public class UserNotFoundException extends AuthenticationException {
+    public UserNotFoundException(String m) {
+        super(m);
+    }
+}
+
+29. CustomAuthenticationFilter.java
+package lms.security.filter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lms.member.domain.Member;
+import lms.member.domain.MemberDTO;
+import lms.security.exception.InputNotFoundException;
+
+import java.io.IOException;
+
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+        super(authenticationManager);
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            MemberDTO memberDTO = objectMapper.readValue(request.getInputStream(), MemberDTO.class);
+
+            if (memberDTO.getId() == null || memberDTO.getPassword() == null) {
+                throw new AuthenticationServiceException("아이디와 비밀번호를 입력해주세요.");
+            }
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(memberDTO.getId(), memberDTO.getPassword());
+
+            return this.getAuthenticationManager().authenticate(authenticationToken);
+
+        } catch (IOException e) {
+            throw new AuthenticationServiceException("로그인 요청 처리 중 오류가 발생했습니다.", e);
+        }
+    }
+
+
+
+}
+
+30. CustomLoginFailureHandler.java
+package lms.security.handler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+
+/**
+ * 로그인 시 예외 처리를 위한 클래스
+ * InputNotFoundException, PasswordNotMatchException, UserNotFoundException 모두 AuthenticationException 을 상속하기 때문에
+ * 이곳에서 예외를 처리한다
+ */
+@Slf4j
+public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+        log.info("로그인 실패 = {}", exception.getMessage());
+        response.setStatus(SC_BAD_REQUEST);
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("utf-8");
+        new ObjectMapper().writeValue(response.getWriter(), exception.getMessage());
+    }
+}
+
+31.CustomLoginSuccessHandler.java
+package lms.security.handler;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lms.jwt.constants.JwtConstants;
+import lms.jwt.constants.JwtUtils;
+import lms.jwt.domain.RefreshToken;
+import lms.jwt.service.JwtService;
+import lms.member.domain.Member;
+import lms.security.domain.UserDetailsImpl;
+
+import java.io.IOException;
+import java.util.Collection;
+
+@RequiredArgsConstructor
+public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
+    private final JwtService jwtService;
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        // 인증 성공 후 사용자 정보 가져오기
+        Member member = ((UserDetailsImpl) authentication.getPrincipal()).getMember();
+
+        // JWT 토큰 생성 및 저장
+        String accessToken = JwtUtils.generateAccessToken(member);
+        String refreshToken = JwtUtils.generateRefreshToken(member);
+        jwtService.save(new RefreshToken(refreshToken, member.getId()));
+
+        // 헤더로 JWT 토큰 전달
+        response.addHeader(JwtConstants.ACCESS, JwtConstants.JWT_TYPE + accessToken);
+        response.addHeader(JwtConstants.REFRESH, JwtConstants.JWT_TYPE + refreshToken);
+
+        // SecurityContext에 인증 정보 설정
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+        // 사용자 권한에 따른 리다이렉트 설정
+        String redirectUrl = determineRedirectUrl(authentication.getAuthorities());
+        System.out.println("Selected Redirect URL: " + redirectUrl); // 디버깅용 로그
+        response.sendRedirect(redirectUrl);
+    }
+
+
+    private String determineRedirectUrl(Collection<? extends GrantedAuthority> authorities) {
+        System.out.println("User Authorities: " + authorities); // 디버깅용 로그
+
+        for (GrantedAuthority authority : authorities) {
+            String role = authority.getAuthority();
+            switch (role) {
+                case "ADMIN":
+                    return "/adminPage";
+                case "PROFESSOR":
+                    return "/professorPage";
+                case "STUDENT":
+                    return "/studentPage";
+                case "USER":
+                	return "/main";
+                default:
+                    return "/loginSuccess"; // 기본 리다이렉트
+            }
+        }
+        // 모든 권한에 대해 리다이렉트가 설정되지 않은 경우
+        return "/loginHome";
+    }
+
+}
+
+32. UserDetailsServiceImpl.java
+package lms.security.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+
+import lms.member.repository.MemberRepository;
+import lms.security.domain.UserDetailsImpl;
+import lms.security.exception.UserNotFoundException;
+
+import java.util.Collections;
+
+@Service
+@RequiredArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    private final MemberRepository memberRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String id) throws AuthenticationException {
+        return memberRepository.findById(id)
+            .map(member -> new UserDetailsImpl(
+                member,
+                Collections.singleton(new SimpleGrantedAuthority(member.getRole().getValue()))
+            ))
+            .orElseThrow(() -> new UserNotFoundException("등록되지 않은 사용자입니다"));
+    }
+
+
+
+}
+

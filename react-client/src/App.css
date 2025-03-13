@@ -1,0 +1,13 @@
+/* 전체 레이아웃 */
+.App {
+  text-align: center;
+}
+
+main {
+  background-color: #f8f9fa;
+  padding: 20px;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

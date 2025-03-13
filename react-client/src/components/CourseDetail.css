@@ -1,0 +1,194 @@
+/* ✅ 강의 상세 페이지 컨테이너 */
+.course-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* ✅ 강의 헤더 */
+.course-header {
+  background-color: #007bff;
+  color: white;
+  padding: 24px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 강의명 스타일 */
+.course-header h2 {
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* 담당 교수 스타일 */
+.professor-name {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* ✅ 강의 개요 박스 */
+.course-overview {
+  background-color: #e9f5ff;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 700px;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 강의 개요 제목 */
+.course-overview h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+/* ✅ 강의 개요 버튼 스타일 */
+.overview-buttons button {
+  width: 85%;
+  padding: 10px 14px;
+  margin: 10px auto;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.overview-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* ✅ 주차별 학습 활동 */
+.week-activities {
+  margin-top: 30px;
+}
+
+.weeks-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* ✅ 주차별 카드 */
+.week-item {
+  width: 48%;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 주차 헤더 */
+.week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+}
+
+/* ✅ 단축 버튼 스타일 */
+.toggle-btn {
+  background-color: #0056b3;
+  color: white;
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 60%;
+}
+
+.toggle-btn:hover {
+  background-color: #004494;
+}
+
+/* ✅ 비디오 컨테츠 버튼 (테두리와 배경 제거) */
+.video-content-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.video-content-btn:hover {
+  color: #004494;
+  text-decoration: underline;
+}
+
+/* ✅ 게시판 리스트 */
+.board-list {
+  margin-top: 14px;
+}
+
+.board-list li {
+  padding: 8px;
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.board-list a {
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.board-list a:hover {
+  color: #0056b3;
+}
+
+/* ✅ 팀 관리 메뉴 */
+.course-detail-container .team-management-menu {
+  background-color: #f8f9fa;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.course-detail-container .team-management-menu li {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.course-detail-container .team-management-menu li:last-child {
+  border-bottom: none;
+}
+
+/* ✅ 설정 버튼 */
+.settings-btn {
+  background-color: #0056b3;
+  color: white;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+
+.settings-btn:hover {
+  background-color: #004494;
+}

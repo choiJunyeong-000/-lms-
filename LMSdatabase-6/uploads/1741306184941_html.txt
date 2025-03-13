@@ -1,0 +1,374 @@
+src/main/resources/templates
+
+home.html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style>
+    .div_box {
+      position: absolute;
+      width: 300px;
+      height: 100px;
+      top: 40%;
+      left: 44%;
+      margin: -50px 0 0 -50px;
+    }
+  </style>
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+  <div class="py-5 text-center">
+    <h2>홈 화면</h2>
+  </div>
+  <div class="row">
+    <!-- 회원가입 버튼 -->
+    <div class="col">
+      <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='/signUp'" type="button">
+        회원 가입
+      </button>
+    </div>
+    <!-- 일반 로그인 버튼 -->
+    <div class="col">
+      <button class="w-100 btn btn-dark btn-lg" onclick="location.href='/loginHome'" type="button">
+        로그인
+      </button>
+    </div>
+  </div>
+  <hr class="my-4">
+  
+</div>
+
+
+</body>
+</html>
+
+loginSuccess.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 성공</title>
+</head>
+<body>
+    <h1 style="text-align: center">로그인 성공!</h1>
+    <a href="/">홈으로 이동</a>
+ <!-- 일반 페이지 이동 버튼 -->
+    <div style="text-align: center">
+        <a href="/main">
+            <button>메인 페이지로 이동</button>
+        </a>
+    </div>
+    <!-- 학생 페이지 이동 버튼 -->
+    <div style="text-align: center" th:if="${userRole eq 'ROLE_STUDENT'}">
+        <a href="/studentPage">
+            <button>학생 페이지로 이동</button>
+        </a>
+    </div>
+
+    <!-- 교수 페이지 이동 버튼 -->
+    <div style="text-align: center" th:if="${userRole eq 'ROLE_PROFESSOR'}">
+        <a href="/professorPage">
+            <button>교수 페이지로 이동</button>
+        </a>
+    </div>
+
+    <!-- 관리자 페이지 이동 버튼 -->
+    <div th:if="${userRole eq 'ROLE_ADMIN'}">
+    <a href="/adminPage"><button>관리자 페이지로 이동</button></a>
+</div>
+
+</body>
+</html>
+
+main.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 페이지</title>
+</head>
+<body>
+    <h1>메인페이지</h1>
+    <p>메인 페이지입니다.</p>
+</body>
+</html>
+
+
+src/main/resources/templates/member 
+
+adminpage.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지</title>
+</head>
+<body>
+    <h1>관리자 페이지</h1>
+    <p>학생과 교수에게 역할을 부여할 수 있습니다.</p>
+    
+    <!-- 학생에게 역할 부여 -->
+    <h2>학생에게 역할 부여</h2>
+    <form action="/admin/assign-role/student" method="post">
+    <label for="studentUserName">학생 이름:</label>
+    <input type="text" id="studentUserName" name="username" required> <!-- name 필드 사용 -->
+    <button type="submit">학생 역할 부여</button>
+</form>
+
+    
+    <!-- 교수에게 역할 부여 -->
+    <h2>교수에게 역할 부여</h2>
+    <form action="/admin/assign-role/professor" method="post">
+        <label for="professorUsername">교수 아이디:</label>
+        <input type="text" id="professorUsername" name="username" required>
+        <button type="submit">교수 역할 부여</button>
+    </form>
+    
+     <!-- 교수에게 역할 부여 -->
+    <h2>유저에게 역할 부여</h2>
+    <form action="/admin/assign-role/user" method="post">
+        <label for="userUsername">유저 아이디:</label>
+        <input type="text" id="userUsername" name="username" required>
+        <button type="submit">유저 역할 부여</button>
+    </form>
+</body>
+</html>
+
+loginHome.html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style>
+    .container {
+      max-width: 560px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>로그인</h2>
+  </div>
+  <form action="/login" method="post">
+    <div>
+      <label for="id">ID</label>
+      <input type="text" id="id" name="id" class="form-control">
+    </div>
+
+    <div>
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" name="password" class="form-control">
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" id="login-user" type="button">로그인</button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/}'|" type="button">취소</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script type="text/javascript" th:src="@{/js/member/login.js}"></script>
+
+</body>
+</html>
+professorpage.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교수 페이지</title>
+</head>
+<body>
+    <h1>교수 페이지</h1>
+    <p>여기는 교수 전용 페이지입니다.</p>
+    <a href="/main">메인 돌아가기</a>
+</body>
+</html>
+
+signUp.html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>회원 가입</h2>
+    </div>
+    <h4 class="mb-3">회원 정보 입력</h4>
+    <form>
+        <div>
+            <label for="id">ID</label>
+            <input type="text" id="id" class="form-control">
+            <p id="error-id" style="color: red"/>
+        </div>
+
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" class="form-control">
+            <p id="error-password" style="color: red"/>
+        </div>
+
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="name" class="form-control">
+            <p id="error-name" style="color: red"/>
+        </div>
+		<div>
+		    <label for="email">이메일</label>
+		    <input type="email" id="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>      
+		    <p id="error-email" style="color: red"></p>
+		</div>
+
+
+
+        <!-- OAuth2 최초 로그인 후 회원가입 시, socialType, socialId 정보를 DB 에 기록해야함 -->
+        <div>
+            <input type="text" id="socialType" class="form-control" th:value="${socialType}" hidden="hidden">
+            <input type="text" id="socialId" class="form-control" th:value="${socialId}" hidden="hidden">
+        </div>
+
+        <hr class="my-4">
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" id="sign-up-user" type="button">회원가입</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/}'|" type="button">취소</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" th:src="@{/js/member/signUp.js}"></script>
+
+</body>
+</html>
+
+studentpage.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 페이지</title>
+</head>
+<body>
+    <h1>학생 페이지</h1>
+    <p>여기는 학생 전용 페이지입니다.</p>
+    <a href="/main">메인 돌아가기</a>
+</body>
+</html>
+
+userpage.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 페이지</title>
+</head>
+<body>
+    <h1>유저 페이지</h1>
+    <p>여기는 유저 전용 페이지입니다.</p>
+    <a href="/student/dashboard">대시보드로 돌아가기</a>
+</body>
+</html>
+
+src/main/resources/static
+
+login.js
+const loginUser = document.querySelector("#login-user");
+
+// 버튼 클릭 이벤트 감지
+loginUser.addEventListener("click", () => {
+
+    // 태그의 id 를 이용해 입력된 값들을 불러와 객체 생성
+    const user = {
+        id: document.querySelector("#id").value,
+        password: document.querySelector("#password").value,
+    }
+
+    // RestAPI 호출
+    fetch("/login", {
+        method: "post",
+        headers: {"Content-Type": "application/json"},  // body 에 담긴 데이터 타입을 명시
+        body: JSON.stringify(user)  // 생성한 객체를 JSON 형식으로 변경
+    }).then(response => {
+        if (response.status === 200) {
+            location.href = "/loginSuccess";
+        } else {
+            alert("로그인에 실패하였습니다.");
+            location.reload();
+        }
+    })
+});
+signUp.js
+const signUpUser = document.querySelector("#sign-up-user");
+
+// 버튼 클릭 이벤트 감지
+signUpUser.addEventListener("click", () => {
+
+    // 태그의 id 를 이용해 입력된 값들을 불러와 객체 생성
+    const user = {
+        id: document.querySelector("#id").value,
+        password: document.querySelector("#password").value,
+        name: document.querySelector("#name").value,
+        email: document.querySelector("#email").value,
+        socialType: document.querySelector("#socialType").value,
+        socialId: document.querySelector("#socialId").value
+    }
+
+    // RestAPI 호출
+    fetch("/signUp", {
+        method: "post",
+        headers: {"Content-Type": "application/json"},  // body 에 담긴 데이터 타입을 명시
+        body: JSON.stringify(user)  // 생성한 객체를 JSON 형식으로 변경
+    }).then(response => {
+        // 기존에 출력된 오류 메세지 제거
+        ["error-id", "error-password", "error-name", "error-email"].forEach(tagId => {
+            document.getElementById(tagId).innerText = '' })
+
+        if (response.status === 200) {
+            alert("회원가입이 완료되었습니다");
+            location.href = "/"
+        } else if(response.status === 409) {    // Conflict
+            response.text().then(err => {
+                alert(err);
+            });
+        } else if (response.status === 400) {
+            response.text().then(err => {
+                const message = JSON.parse(err);
+                Object.entries(message).forEach(
+                    ([key, value]) =>
+                        document.getElementById(`${key}`).innerText = `${value}`    // 에러 메세지 출력
+                );
+            });
+        } else {
+            alert("회원가입에 실패하였습니다");
+        }
+    })
+});

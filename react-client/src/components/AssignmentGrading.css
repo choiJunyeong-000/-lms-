@@ -1,0 +1,54 @@
+/* 전체 컨테이너 스타일 */
+.assignment-container {
+    max-width: 600px; /* 화면 너비에 맞춰 조정 */
+    margin: 0 auto;
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  /* 헤더(타이틀) 스타일 */
+  .assignment-header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  /* 과제 리스트 영역(카드들을 묶어주는 컨테이너) */
+  .assignment-list {
+    display: flex;
+    flex-direction: column; /* 세로로 나열 */
+    gap: 16px; /* 카드 사이 간격 */
+  }
+  
+  /* 과제 개별 카드 */
+  .assignment-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+  }
+  
+  /* 과제 내용 텍스트 스타일 */
+  .assignment-item p {
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+  
+  /* 다운로드 버튼 스타일 */
+  .assignment-item button {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff; /* 파란색 계열 */
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  /* 버튼 호버 효과 */
+  .assignment-item button:hover {
+    background-color: #0056b3;
+  }
+  

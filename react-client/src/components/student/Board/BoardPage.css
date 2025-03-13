@@ -1,0 +1,40 @@
+/* 게시판 탭 스타일 */
+.board-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: #4285f4;
+    color: white;
+    font-weight: bold;
+}
+
+/* 게시판 목록 */
+.board-content .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.board-content .table th,
+.board-content .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.board-content .table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}

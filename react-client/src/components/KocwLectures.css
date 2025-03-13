@@ -1,0 +1,132 @@
+/* ✅ 전체 컨테이너 */
+.kocw-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fc, #e6ecf5); /* 🔥 좀 더 차분한 블루-그레이 */
+    border-radius: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* ✅ 제목 스타일 */
+.kocw-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ✅ 입력 폼 */
+.kocw-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 입력 필드 */
+.kocw-input, 
+.kocw-textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.kocw-input:focus, 
+.kocw-textarea:focus {
+    outline: none;
+    border-color: #5a67d8; /* 🔵 부드러운 블루 계열 */
+    box-shadow: 0 0 8px rgba(90, 103, 216, 0.4);
+}
+
+/* ✅ 파일 업로드 버튼 (🔥 기존 파란색을 차분한 회색-블루로 변경) */
+.kocw-file-input {
+    padding: 12px;
+    border: 1px solid #b0b8d1;
+    background: #e0e6f1; /* 🔥 차분한 블루-그레이 */
+    color: #333;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+.kocw-file-input:hover {
+    background: #d0d6e3;
+    border-color: #8a92b2;
+}
+
+/* ✅ 비디오 목록 */
+.kocw-video-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+/* ✅ 비디오 아이템 */
+.kocw-video-item {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kocw-video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ 비디오 크기 조정 */
+.kocw-video {
+    width: 100%;
+    border-radius: 6px;
+    transition: transform 0.3s ease;
+}
+
+.kocw-video:hover {
+    transform: scale(1.02);
+}
+
+/* ✅ 삭제 버튼 */
+.kocw-delete-btn {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.kocw-delete-btn:hover {
+    background: #c0392b;
+}
+
+/* ✅ 반응형 디자인 */
+@media (max-width: 768px) {
+    .kocw-container {
+        width: 90%;
+        padding: 20px;
+    }
+    
+    .kocw-form {
+        padding: 20px;
+    }
+}

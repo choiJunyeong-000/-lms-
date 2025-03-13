@@ -1,0 +1,92 @@
+.admin-sidebar {
+  position: absolute;
+  top: 80px; /* 헤더 아래에 위치 */
+  left: 0;
+  bottom: 0; /* 하단까지 확장 */
+  width: 50px;
+  background-color: rgba(51, 51, 51, 0.5);
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.admin-container {
+  display: flex;
+  height: auto; /* 전체 높이를 컨텐츠에 맞춤 */
+  min-height: 100vh; /* 최소 높이를 뷰포트에 맞춤 */
+}
+
+.admin-sidebar:hover {
+  width: 200px;
+  background-color: rgba(51, 51, 51, 1);
+}
+.sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.arrow {
+  font-size: 1.5em;
+  color: #fff; /* 화살표 색상 흰색 */
+  transition: opacity 0.3s ease;
+}
+
+.admin-sidebar:hover .arrow {
+  opacity: 0;
+}
+
+.sidebar-title {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #fff; /* 제목 색상 흰색 */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-sidebar:hover .sidebar-title {
+  opacity: 1;
+}
+
+.admin-sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-sidebar nav ul li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #444; /* 항목 배경색 어두운 회색 */
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-sidebar:hover nav ul li {
+  opacity: 1;
+}
+
+.admin-sidebar nav ul li a {
+  text-decoration: none;
+  color: #fff; /* 링크 색상 흰색 */
+  font-weight: bold;
+}
+
+.admin-sidebar nav ul li a:hover {
+  text-decoration: underline;
+}
+
+.admin-content-container {
+  flex: 1;
+  padding: 20px;
+  margin-left: 50px; /* Adjust margin to account for the sidebar */
+  transition: margin-left 0.3s ease;
+}
+
+.admin-sidebar:hover ~ .admin-content-container {
+  margin-left: 200px;
+}

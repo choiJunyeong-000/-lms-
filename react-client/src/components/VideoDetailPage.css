@@ -1,0 +1,15 @@
+.video-player-container {
+    width: 800px;   /* 팝업 크기와 동일 */
+    height: 600px;  /* 팝업 크기와 동일 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black; /* 검은 배경 */
+    overflow: hidden; /* 혹시라도 넘치는 부분 숨김 */
+  }
+  
+  .main-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 비율 유지하면서 창에 맞춤 */
+  }

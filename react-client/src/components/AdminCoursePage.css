@@ -1,0 +1,102 @@
+/* 전체 컨테이너 스타일 */
+.admin-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+  display: block; /* 컨테이너가 블록 수준 요소로 보이도록 */
+}
+
+/* 제목 스타일 */
+h2 {
+  color: #333;
+  margin-bottom: 20px; /* 제목과 표 사이의 간격 조정 */
+  display: block; /* 제목이 블록 레벨로 처리되도록 */
+  text-align: center; /* 제목 가운데 정렬 */
+}
+
+/* 테이블 스타일 */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px; /* 제목과 표 사이의 간격을 위해 margin-top 추가 */
+}
+
+/* 기타 스타일들은 그대로 유지 */
+
+
+
+.admin-table th, .admin-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.admin-table th {
+  background: #007bff;
+  font-weight: bold;
+}
+
+.admin-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* 버튼 스타일 */
+button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.approve-btn {
+  background: #007bff;
+  color: white;
+}
+
+.approve-btn:hover {
+  background: #0056b3;
+}
+
+.reject-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover {
+  background: #a71d2a;
+}
+
+.download-btn {
+  background: #28a745;
+  color: white;
+}
+
+.download-btn:hover {
+  background: #1e7e34;
+}
+
+/* 상태별 스타일 */
+.status {
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 5px;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.status.completed { 
+  color: #007bff;
+}
+
+.status.cancelled {
+  color: #dc3545;
+}
+
+.status.pending {
+  color: #28a745;
+}

@@ -1,0 +1,128 @@
+/* ✅ 전체 페이지 배경 (패턴 추가 + 더 부드러운 그라데이션) */
+body {
+    background: linear-gradient(135deg, #e3e9f7, #c8d6f0);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* ✅ 퀴즈 컨테이너 (더욱 깔끔하고 입체적인 디자인) */
+.quiz-container {
+    max-width: 600px;  /* ✅ 크기 키우기 */
+    width: 90%;
+    margin: 100px auto; /* ✅ 위아래 여백 줄이기 */
+    padding: 50px; /* ✅ 내부 여백 증가 */
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2); /* ✅ 그림자 더 진하게 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ 퀴즈 제목 (더 강렬한 강조 효과 추가) */
+.quiz-container h2 {
+    font-size: 28px; /* ✅ 폰트 더 크게 */
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 30px; /* ✅ 버튼과 간격 더 벌리기 */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+/* ✅ 퀴즈 제목 강조 (애니메이션 효과) */
+.quiz-container h2::after {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 4px;
+    background: #007bff;
+    margin: 8px auto 0;
+    border-radius: 2px;
+    transition: width 0.3s ease-in-out;
+}
+
+.quiz-container h2:hover::after {
+    width: 140px;
+    background: #0056b3;
+}
+
+/* ✅ 버튼 부모 컨테이너 (버튼 정렬 개선) */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* ✅ 버튼 간격 살짝 더 넓힘 */
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* ✅ 버튼 스타일 (더 강렬한 3D 효과 추가) */
+.start-btn,
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 55px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✅ 버튼 hover 효과 (더 강렬한 빛나는 효과 추가) */
+.start-btn:hover,
+.back-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004494);
+    transform: scale(1.08);
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ✅ 버튼 클릭 효과 */
+.start-btn:active,
+.back-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ 반짝이는 애니메이션 */
+.start-btn::before,
+.back-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -80%;
+    width: 160%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+    transition: all 0.5s ease-in-out;
+}
+
+.start-btn:hover::before,
+.back-btn:hover::before {
+    left: 100%;
+}
+
+/* ✅ 반응형 (모바일에서 버튼 세로 정렬) */
+@media (max-width: 600px) {
+    .button-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .start-btn,
+    .back-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}

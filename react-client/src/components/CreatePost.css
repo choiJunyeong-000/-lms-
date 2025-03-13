@@ -1,0 +1,100 @@
+/* 전체 컨테이너 */
+.create-post-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 */
+.create-post-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 입력 필드 */
+.create-post-input,
+.create-post-textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.create-post-input:focus,
+.create-post-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* 텍스트 영역 */
+.create-post-textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+/* 버튼 그룹 */
+.create-post-buttons {
+    display: flex;
+    flex-direction: column; /* 버튼을 세로로 정렬 */
+    gap: 10px; /* 버튼 사이 간격 */
+    margin-top: 15px;
+    align-items: stretch; /* 버튼을 동일한 너비로 설정 */
+}
+
+/* 취소 버튼 */
+.create-post-cancel {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+}
+
+.create-post-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* 등록 버튼 */
+.create-post-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+}
+
+.create-post-submit:hover {
+    background-color: #0056b3;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .create-post-container {
+        padding: 15px;
+    }
+    
+    .create-post-input,
+    .create-post-textarea {
+        font-size: 14px;
+    }
+
+    .create-post-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

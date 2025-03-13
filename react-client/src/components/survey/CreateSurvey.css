@@ -1,0 +1,177 @@
+/* ========== 1. 공통 컨테이너, 폼 레이아웃 ========== */
+.create-survey-container {
+    max-width: 1200px; /* 화면폭에 맞춰 넓게 사용 */
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-survey-container h2 {
+    text-align: center;
+    color: #222;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* 폼 전체를 flex로 구성해 수직 스택 + 공간 확보 */
+.create-survey-container form {
+    width: 100%;
+    max-width: 1000px; /* 폼 자체의 최대 너비 */
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* 수직으로 쌓기 */
+    gap: 25px;
+}
+
+/* ========== 2. 공통(전역) 질문 영역 ========== */
+/* 공통 질문들을 2열(grid)로 나누어 가로 배치 */
+.common-questions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+    background-color: #e9ecef;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* ========== 3. 전역 입력 필드 스타일 ========== */
+.create-survey-container .form-group {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-survey-container label {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.create-survey-container input,
+.create-survey-container textarea,
+.create-survey-container select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.create-survey-container textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.create-survey-container input:focus,
+.create-survey-container textarea:focus,
+.create-survey-container select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* ========== 4. 개별(질문) 영역 ========== */
+.individual-questions {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.survey-form {
+    margin-bottom: 30px;
+}
+
+.survey-form h3 {
+    margin-bottom: 15px;
+}
+
+/* 선택지 영역 (개별 설문) */
+.create-survey-container .options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #eef2f7;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.create-survey-container .option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-survey-container .option-item input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px;
+}
+
+.create-survey-container .remove-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 8px;
+    cursor: pointer;
+}
+
+.create-survey-container .remove-btn:hover {
+    background-color: #c82333;
+}
+
+.create-survey-container .option-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.create-survey-container .option-buttons button {
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.create-survey-container .option-buttons button:hover {
+    background-color: #5a6268;
+}
+
+/* ========== 5. 제출 버튼 및 기타 ========== */
+.create-survey-container .submit-btn {
+    width: 50%;
+    margin-top: 20px;
+    padding: 14px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-self: center; /* 폼 내에서 가운데 정렬 */
+}
+
+.create-survey-container .submit-btn:hover {
+    background-color: #218838;
+}

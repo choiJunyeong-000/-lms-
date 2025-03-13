@@ -1,0 +1,117 @@
+/* TeamProject.module.css */
+.teamProjectContainer {
+  display: flex;
+  gap: 20px;
+  background-color: #f5f7fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.teamProjectSidebar {
+  width: 220px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  flex-shrink: 0;
+}
+
+.teamProjectSidebar h3 {
+  margin: 0 0 15px;
+  font-size: 18px;
+}
+
+.teamProjectSidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.teamProjectSidebar li {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.teamProjectSidebar li:hover {
+  background-color: #f0f0f0;
+}
+
+.teamProjectSidebar li.active {
+  background-color: #e6f7ff;
+  font-weight: bold;
+}
+
+.teamProjectContent {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.teamProjectList {
+  margin-bottom: 20px;
+}
+
+.teamProjectCard {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.teamProjectMembers {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.teamProjectMembers li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.teamProjectTabs {
+  margin-top: auto; /* 컨텐츠 아래쪽으로 밀기 */
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.teamProjectTabs button {
+  padding: 10px 15px;
+  background-color: #eee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.teamProjectTabs button:hover {
+  background-color: #ddd;
+}
+
+.teamProjectTabs button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .teamProjectContainer {
+    flex-direction: column;
+  }
+  .teamProjectSidebar {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}

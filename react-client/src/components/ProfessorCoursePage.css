@@ -1,0 +1,118 @@
+/* 전체 컨테이너 */
+.lms-container {
+  max-width: 1200px; /* 기존보다 넓게 */
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+/* 제목 스타일 */
+.lms-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
+
+.lms-subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+/* 강의 목록 */
+.lms-course-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* 강의 카드 */
+.lms-course-card {
+  background: #f9f9f9;
+  padding: 20px;
+  width: 350px; /* 기존보다 넓게 */
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  border-left: 6px solid #4CAF50;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.lms-course-card:hover {
+  background: #f1f1f1;
+  transform: translateY(-5px);
+}
+
+/* 강의 헤더 */
+.lms-course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 강의 제목 */
+.lms-course-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 강의 상태 (OPEN, COMPLETED, CANCELLED) */
+.lms-course-status {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+}
+
+.lms-course-status.open {
+  background: #ffcc00;
+}
+
+.lms-course-status.completed {
+  background: #4CAF50;
+}
+
+.lms-course-status.cancelled {
+  background: #e74c3c;
+}
+
+/* 강의 정보 */
+.lms-course-type, .lms-course-professor {
+  color: #555;
+  font-size: 15px;
+  margin-top: 8px;
+}
+
+/* 강의실 입장 버튼 */
+.lms-enter-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.lms-enter-btn:hover {
+  background: #0056b3;
+}
+
+/* 로딩 화면 */
+.lms-loading {
+  text-align: center;
+  font-size: 22px;
+  color: #666;
+  margin-top: 60px;
+}

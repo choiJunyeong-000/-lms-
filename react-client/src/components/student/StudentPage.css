@@ -1,0 +1,16 @@
+.admin-container {
+    display: flex;
+    height: auto;
+    min-height: 100vh;
+}
+
+.admin-content-container {
+    flex: 1;
+    padding: 20px;
+    margin-left: 50px;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar:hover ~ .admin-content-container {
+    margin-left: 200px;
+}

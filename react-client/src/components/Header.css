@@ -1,0 +1,50 @@
+.App-header {
+  background-color: #007bff;
+  color: white;
+  padding: 0 20px; /* 패딩을 조정하여 헤더 높이를 줄임 */
+  font-size: 1.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px; /* 헤더 높이를 줄임 */
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  width: 110px; /* 로고의 너비를 키움 */
+  height: auto;
+  margin-right: 10px; /* 로고와 타이틀 사이의 간격을 설정 */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.title-text {
+  color: white;
+  font-size: 1.2em; /* 폰트 크기를 줄임 */
+  cursor: pointer; /* 마우스 커서를 포인터로 설정 */
+  display: flex;
+  align-items: center; /* 텍스트를 가운데로 정렬 */
+  padding: 0; /* 내부 패딩 제거 */
+  text-decoration: none; /* 마우스 오버 시 밑줄 제거 */
+}
+
+.portal-text {
+  color: white;
+  font-size: 15px; /* 폰트 크기를 줄임 */
+  cursor: pointer; /* 마우스 커서를 포인터로 설정 */
+  margin-left: 10px;
+  white-space: nowrap; /* 텍스트가 한 줄로 나오도록 설정 */
+  display: flex;
+  align-items: center; /* 텍스트를 가운데로 정렬 */
+}
+
+.portal-text:hover {
+  text-decoration: underline; /* 마우스 오버 시 밑줄 추가 */
+}

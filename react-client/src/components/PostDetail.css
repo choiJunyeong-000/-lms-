@@ -1,0 +1,112 @@
+/* ✅ 기존 스타일 유지 */
+.post-detail-wrapper {
+    width: 80%;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+/* ✅ 제목 스타일 */
+.post-detail-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+    position: relative;
+}
+
+/* ✅ 제목 밑줄 (긴 회색) */
+.post-detail-title::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #888;
+    margin: 10px auto 0;
+}
+
+/* ✅ 작성자 & 날짜 정보 */
+.post-detail-info {
+    font-size: 20px;
+    color: #444;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* ✅ 본문 스타일 */
+.post-detail-content {
+    font-size: 22px;
+    line-height: 1.8;
+    color: #222;
+    margin-top: 20px;
+    text-align: center;
+    white-space: pre-wrap;
+}
+
+/* ✅ 목록으로 돌아가기 버튼 */
+.post-back-button {
+    display: block;
+    width: 200px;
+    padding: 15px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 30px auto;
+    transition: 0.2s ease-in-out;
+}
+
+.post-back-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* ✅ 버튼 영역 */
+.post-detail-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* 버튼 간격 */
+    margin-top: 25px;
+}
+
+/* ✅ 수정 버튼 */
+.post-edit-button {
+    width: 140px;
+    height: 45px;
+    background-color: #007bff; /* 녹색 */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.post-edit-button:hover {
+    background-color: #218838; /* 더 진한 녹색 */
+    transform: scale(1.05);
+}
+
+/* ✅ 삭제 버튼 */
+.post-delete-button {
+    width: 140px;
+    height: 45px;
+    background-color: #007bff; /* 빨간색 */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.post-delete-button:hover {
+    background-color: #c82333; /* 더 진한 빨간색 */
+    transform: scale(1.05);
+}
